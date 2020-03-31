@@ -1,0 +1,11 @@
+.users-list-title {
+    color: #ab9f61;
+}
+
+.users-list > li {
+    background-color: #717b85;
+  }
+  
+.users-list > li:hover {
+    background-color: #535a61;
+  }
