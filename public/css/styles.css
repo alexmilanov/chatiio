@@ -9,3 +9,8 @@
 .users-list > li:hover {
     background-color: #535a61;
   }
+
+  .users-list > li.ui-selected {
+    background-color: #ddcada;
+  }
+

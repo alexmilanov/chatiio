@@ -26,18 +26,21 @@ $(function() {
         })
     })
 
-    socket.on('new-generated-username', usernameData => {
+    socket.on('self-username', usernameData => {
         console.log(usernameData)
 
         selfUsername = usernameData.username
     })
 
-    socket.on('new-user', userData => {
-        // if(userData.username !== selfUsername) {
-            console.log(123)
-            $('#user-list').append('<li class="list-group-item">' + userData.username + '</li>')
-        // }
-    })
+    // socket.on('new-user', userData => {
+    //     console.log(userData)
+    //     console.log(selfUsername)
+    //     console.log(123)
+    //     if(userData.username !== selfUsername) {
+    //         console.log(123)
+    //         $('#user-list').append('<li class="list-group-item">' + userData.username + '</li>')
+    //     }
+    // })
 
     socket.emit('fetch-current-users')
 
@@ -45,11 +48,29 @@ $(function() {
         $('#user-list').empty()
 
         usersData.usernames.forEach(val => {
-            $('#user-list').append('<li class="list-group-item">' + val + '</li>')
+            if(val !== selfUsername) {
+                $('#user-list').append('<li class="list-group-item">' + val + '</li>')
+            }
         })
     })
 
     window.addEventListener("beforeunload", function(e){
         socket.emit('leaving')
     }, false)
+
+    $('#user-list').selectable()
+
+    $('.list-group-item').click(function() {
+
+        if($('.list-group-item.ui-selected'.length)) {
+            $('#send-private-msg').show()
+        }
+        else {
+            $('#send-private-msg').hide()
+        }
+    }).click()
+
+    $( "#user-list" ).bind( "mousedown", function ( e ) {
+        e.metaKey = true;
+    } ).selectable();
 })

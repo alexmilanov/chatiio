@@ -27,7 +27,7 @@ let messagesHistory = {
 io.on('connection', socket => {
     socket.username = `anonymous_${Date.now()}`
 
-    io.to(socket.id).emit('new-generated-username', { username: socket.username })
+    io.to(socket.id).emit('self-username', { username: socket.username })
 
     if(!currentLoggedUsernames.includes(socket.username)) {
         currentLoggedUsernames.push(socket.username)
@@ -58,6 +58,6 @@ io.on('connection', socket => {
         console.log('leaving')
 
         currentLoggedUsernames = currentLoggedUsernames.filter(item => item !== socket.username)
-        io.to(socket.id).emit('current-usernames', { usernames: currentLoggedUsernames })
+        io.sockets.emit('current-usernames', { usernames: currentLoggedUsernames })
     })
 })
