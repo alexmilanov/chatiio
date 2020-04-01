@@ -87,11 +87,11 @@ io.on('connection', socket => {
         //Notify the selected users that they has private messages
         selectedUsers.users.forEach(username => {
             if(connectedUsers.hasOwnProperty(username)) {
-                io.to(connectedUsers[username].id).emit('new-private-message-room', privateChatRoomName)
+                io.to(connectedUsers[username].id).emit('new-message-room', privateChatRoomName)
             }
         })
 
-        io.to(socket.id).emit('new-private-message-room', privateChatRoomName)
+        io.to(socket.id).emit('new-message-room', privateChatRoomName)
         privateChatRooms[privateChatRoomName]['users'].push(socket.username)
 
         messagesHistory[privateChatRoomName] = []

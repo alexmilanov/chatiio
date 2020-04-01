@@ -74,7 +74,7 @@ $(function() {
         }
     })
 
-    $("#user-list").bind("mousedown", function(e) {
+    $("#user-list, ").bind("mousedown", function(e) {
         e.metaKey = true;
     }).selectable()
 
@@ -91,8 +91,8 @@ $(function() {
         $('#send-private-msg').hide()
     })
 
-    socket.on('new-private-message-room', roomName => {
-        $('#private-rooms-list').append('<li class="list-group-item" id="' + roomName + '">' + roomName + '</li>')
+    socket.on('new-message-room', roomName => {
+        $('#private-rooms-list').append('<li class="list-group-item removable-room" id="' + roomName + '">' + roomName + '</li>')
     })
 
     $('#private-rooms-list').on('click', 'li.list-group-item', function() {
