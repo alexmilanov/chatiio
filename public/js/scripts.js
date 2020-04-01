@@ -74,7 +74,7 @@ $(function() {
         }
     })
 
-    $("#user-list, ").bind("mousedown", function(e) {
+    $("#user-list").bind("mousedown", function(e) {
         e.metaKey = true;
     }).selectable()
 
