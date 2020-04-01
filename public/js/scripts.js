@@ -86,7 +86,7 @@ $(function() {
             $(this).removeClass('ui-selected')
         })
 
-        socket.emit('create-private-room', { users: selectedUsers })
+        socket.emit('create-room', { users: selectedUsers })
 
         $('#send-private-msg').hide()
     })
