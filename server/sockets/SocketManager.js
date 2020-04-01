@@ -1,7 +1,5 @@
 module.exports = class SocketManager {
-    constructor(serverInstance) {
-        let currentLoggedUsernames = []
-
+    constructor(serverInstance, storageInstance) {
         let messagesHistory = {
             'main': []
         }
@@ -18,8 +16,8 @@ module.exports = class SocketManager {
         
             io.to(socket.id).emit('self-username', { username: socket.username })
         
-            if(!currentLoggedUsernames.includes(socket.username)) {
-                currentLoggedUsernames.push(socket.username)
+            if(!storageInstance.hasUsername(socket.username)) {
+                storageInstance.addLoggedUsername(socket.username)
             }
         
             console.log(`[SOCKET] New user with name: ${socket.username} has arrived!`)
@@ -43,14 +41,14 @@ module.exports = class SocketManager {
             })
         
             socket.on('fetch-current-users', () => {
-                io.sockets.emit('current-usernames', { usernames: currentLoggedUsernames })
+                io.sockets.emit('current-usernames', { usernames: storageInstance.getCurrentLoggedUsernames() })
             })
         
             socket.on('leaving', () => {
                 console.log(`[SOCKET] User ${socket.username} has left the chat`)
         
-                currentLoggedUsernames = currentLoggedUsernames.filter(item => item !== socket.username)
-                io.sockets.emit('current-usernames', { usernames: currentLoggedUsernames })
+                storageInstance.removeLoggedUsername(socket.username)
+                io.sockets.emit('current-usernames', { usernames: storageInstance.getCurrentLoggedUsernames() })
             })
         
             socket.on('create-room', selectedUsers => {
@@ -81,6 +79,7 @@ module.exports = class SocketManager {
             })
         
             socket.on('join-room', room => {
+                socket.leave(socket.room)
                 socket.join(room.roomName)
                 socket.room = room.roomName
         

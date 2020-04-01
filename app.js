@@ -17,4 +17,6 @@ server = app.listen(port, () => {
 }) //ToDo move those vars to env file
 
 const socketManager = require('./server/sockets/SocketManager')
-new socketManager(server)
+const storageManagerInstance = require('./server/storage/StorageManager')
+//const storageManagerInstance = new storageManager
+new socketManager(server, storageManagerInstance)
