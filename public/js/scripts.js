@@ -1,6 +1,9 @@
 $(function() {
     var selfUsername
     var socket = io.connect("http://localhost:3000")
+    var currentRoomName = 'main' //Default room is main
+
+    $('#room-title').text(currentRoomName)
 
     $('#send-message').click(function() {
         var messageContent = $('#message-text').val()
@@ -21,7 +24,9 @@ $(function() {
     socket.emit('fetch-message-history')
 
     socket.on('message-history', messageHistory => {
-        messageHistory.main.forEach(messageData => {
+        $('#chat-window').empty()
+
+        messageHistory.forEach(messageData => {
             $('#chat-window').append(`${messageData.username}: ${messageData.messageContent}<br>`)
         })
     })
@@ -61,7 +66,6 @@ $(function() {
     // $('#user-list').selectable()
     
     $('#user-list').on('click', 'li.list-group-item', function() {
-        console.log($('.list-group-item.ui-selected').length)
         if($('.list-group-item.ui-selected').length) {
             $('#send-private-msg').show()
         }
@@ -73,4 +77,39 @@ $(function() {
     $("#user-list").bind("mousedown", function(e) {
         e.metaKey = true;
     }).selectable()
+
+    $('#send-private-msg').click(function() {
+        var selectedUsers = []
+
+        $('li.ui-selected').each(function(e) {
+            selectedUsers.push($(this).text())
+            $(this).removeClass('ui-selected')
+        })
+
+        socket.emit('create-private-room', { users: selectedUsers })
+
+        $('#send-private-msg').hide()
+    })
+
+    socket.on('new-private-message-room', roomName => {
+        $('#private-rooms-list').append('<li class="list-group-item" id="' + roomName + '">' + roomName + '</li>')
+    })
+
+    $('#private-rooms-list').on('click', 'li.list-group-item', function() {
+        var roomName = currentRoomName = $(this).text()
+        socket.emit('join-room', { roomName })
+
+        $('#room-title').text(roomName)
+        $('#leave-room-button').show()
+    })
+
+    $('#leave-room-button').click(function() {
+        socket.emit('join-room', { roomName: 'main' })
+
+        $('#room-title').text('main')
+
+        $('#'+currentRoomName).remove()
+
+        $(this).hide()
+    })
 })

@@ -26,14 +26,30 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-2 px-1 bg-dark position-fixed h-100" id="sticky-sidebar">
-                    <h3 class="users-list-title">Active Users</h3>
-                    <hr class="users-list-title">
+                    <div class="row-fluid adjust-height overflow-auto">
+                        <h3 class="list-title">Active Users</h3>
+                        <hr class="list-title">
+    
+                        <ul class="list-group list-group-flush users-list" id="user-list"></ul>
+                        <!-- <ul class="list-group list-group-flush" -->
+                        <button type="button" id="send-private-msg" class="btn btn-success btn-sm mt-1" style="display: none;">Send Private Message</button>
+                    </div>
+                    <div class="row-fluid adjust-height overflow-auto">
+                        <h3 class="list-title">Private Rooms</h3>
 
-                    <ul class="list-group list-group-flush users-list" id="user-list"></ul>
-                    <button type="button" id="send-private-msg" class="btn btn-success btn-sm mt-1" style="display: none;">Send Private Message</button>
+                        <hr class="list-title">
+    
+                        <ul class="list-group list-group-flush private-rooms-list" id="private-rooms-list"></ul>
+                        <hr>
+                        <button type="button" class="btn btn-danger btn-sm" style="display: none;" id="leave-room-button">Leave the room</button>
+                    </div>
                 </div>
           
               <div class="col offset-2">
+                  <div class="row-fluid">
+                      <h2>Room: <span id="room-title"></span></h2>
+                        <hr>
+                  </div>
                   <div class="row">
                         <div class="col overflow-auto h-100" id="chat-window">
                             

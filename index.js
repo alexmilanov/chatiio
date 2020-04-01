@@ -24,8 +24,14 @@ let messagesHistory = {
     'main': []
 }
 
+let connectedUsers = {}
+
+let privateChatRooms = {}
+
 io.on('connection', socket => {
     socket.username = `anonymous_${Date.now()}`
+    socket.room = 'main'
+    socket.join(socket.room)
 
     io.to(socket.id).emit('self-username', { username: socket.username })
 
@@ -35,6 +41,8 @@ io.on('connection', socket => {
 
     console.log(`[SOCKET] New user with name: ${socket.username} has arrived!`)
 
+    connectedUsers[socket.username] = socket //Save the whole socket object per username so later I can send some data per specific username
+
     // socket.on('change-username', data => {
     //     socket.username = data.username.substring(0, 25) //Limit the username to N chars
     // })
@@ -42,12 +50,13 @@ io.on('connection', socket => {
     socket.on('publish-message', data => {
         console.log(`[SOCKET] New message has been received: ${data.messageContent}`)
 
-        messagesHistory.main.push({ messageContent: data.messageContent, username: socket.username })
-        io.sockets.emit('publish-message', { messageContent: data.messageContent, username: socket.username })
+        messagesHistory[socket.room].push({ messageContent: data.messageContent, username: socket.username })
+        // socket.broadcast.to(socket.room).emit('publish-message', { messageContent: data.messageContent, username: socket.username })
+        io.in(socket.room).emit('publish-message', { messageContent: data.messageContent, username: socket.username })
     })
 
     socket.on('fetch-message-history', () => {
-        io.to(socket.id).emit('message-history', messagesHistory);
+        io.to(socket.id).emit('message-history', messagesHistory[socket.room])
     })
 
     socket.on('fetch-current-users', () => {
@@ -59,5 +68,39 @@ io.on('connection', socket => {
 
         currentLoggedUsernames = currentLoggedUsernames.filter(item => item !== socket.username)
         io.sockets.emit('current-usernames', { usernames: currentLoggedUsernames })
+    })
+
+    socket.on('create-private-room', selectedUsers => {
+        console.log(`[SOCKET] User ${socket.username} create new private room with users ${selectedUsers.users}`)
+
+        const privateChatRoomName = `room_${Date.now()}`
+        
+        if(!privateChatRooms.hasOwnProperty(privateChatRoomName)) {
+            privateChatRooms[privateChatRoomName] = {}
+            privateChatRooms[privateChatRoomName]['users'] = []
+        }
+
+        console.log(`[SOCKET] New private room ${privateChatRoomName} has been created`)
+
+        privateChatRooms[privateChatRoomName]['users'] = selectedUsers.users
+
+        //Notify the selected users that they has private messages
+        selectedUsers.users.forEach(username => {
+            if(connectedUsers.hasOwnProperty(username)) {
+                io.to(connectedUsers[username].id).emit('new-private-message-room', privateChatRoomName)
+            }
+        })
+
+        io.to(socket.id).emit('new-private-message-room', privateChatRoomName)
+        privateChatRooms[privateChatRoomName]['users'].push(socket.username)
+
+        messagesHistory[privateChatRoomName] = []
+    })
+
+    socket.on('join-room', room => {
+        socket.join(room.roomName)
+        socket.room = room.roomName
+
+        io.to(socket.id).emit('message-history', messagesHistory[socket.room])
     })
 })
