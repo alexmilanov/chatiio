@@ -58,19 +58,19 @@ $(function() {
         socket.emit('leaving')
     }, false)
 
-    $('#user-list').selectable()
-
-    $('.list-group-item').click(function() {
-
-        if($('.list-group-item.ui-selected'.length)) {
+    // $('#user-list').selectable()
+    
+    $('#user-list').on('click', 'li.list-group-item', function() {
+        console.log($('.list-group-item.ui-selected').length)
+        if($('.list-group-item.ui-selected').length) {
             $('#send-private-msg').show()
         }
         else {
             $('#send-private-msg').hide()
         }
-    }).click()
+    })
 
-    $( "#user-list" ).bind( "mousedown", function ( e ) {
+    $("#user-list").bind("mousedown", function(e) {
         e.metaKey = true;
-    } ).selectable();
+    }).selectable()
 })

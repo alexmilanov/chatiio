@@ -55,7 +55,7 @@ io.on('connection', socket => {
     })
 
     socket.on('leaving', () => {
-        console.log('leaving')
+        console.log(`[SOCKET] User ${socket.username} has left the chat`)
 
         currentLoggedUsernames = currentLoggedUsernames.filter(item => item !== socket.username)
         io.sockets.emit('current-usernames', { usernames: currentLoggedUsernames })

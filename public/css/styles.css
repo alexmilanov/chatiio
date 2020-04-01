@@ -3,14 +3,18 @@
 }
 
 .users-list > li {
-    background-color: #717b85;
-  }
+  background-color: #717b85;
+}
   
 .users-list > li:hover {
-    background-color: #535a61;
-  }
+  background-color: #535a61;
+}
 
-  .users-list > li.ui-selected {
-    background-color: #ddcada;
-  }
+.users-list > li.ui-selected {
+  background-color: #bfb78c;
+}
+
+.users-list > li.ui-selected:hover {
+  background-color: #b0a880;
+}
 
