@@ -4,10 +4,9 @@ module.exports = class StorageManager {
         'main': []
     }
     static #connectedUsers = {}
-
     static #privateChatRooms = {}
 
-    static hasUsername(username) {
+    static isUsernameInLoggedUsers(username) {
         return StorageManager.#currentLoggedUsernames.includes(username)
     }
 

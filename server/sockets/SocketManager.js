@@ -17,7 +17,7 @@ module.exports = class SocketManager {
         
             this.#io.to(socket.id).emit('self-username', { username: socket.username })
         
-            if(!storageInstance.hasUsername(socket.username)) {
+            if(!storageInstance.isUsernameInLoggedUsers(socket.username)) {
                 storageInstance.addLoggedUsername(socket.username)
             }
         
