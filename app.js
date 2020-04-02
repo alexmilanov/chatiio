@@ -1,4 +1,4 @@
-require('dotenv').config() //Configure the dotenv 
+require('dotenv').config()
 
 const express = require("express")
 const app = express()
@@ -14,6 +14,6 @@ const port = process.env.PORT || 3000
 server = app.listen(port, () => {
     console.log('[SERVER] Successfully started...')
     console.log(`[SERVER] Listen on port: ${port}...`)
-}) //ToDo move those vars to env file
+})
 
 require('./server/sockets/index')(server)
