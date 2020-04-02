@@ -37,16 +37,6 @@ $(function() {
         selfUsername = usernameData.username
     })
 
-    // socket.on('new-user', userData => {
-    //     console.log(userData)
-    //     console.log(selfUsername)
-    //     console.log(123)
-    //     if(userData.username !== selfUsername) {
-    //         console.log(123)
-    //         $('#user-list').append('<li class="list-group-item">' + userData.username + '</li>')
-    //     }
-    // })
-
     socket.emit('fetch-current-users')
 
     socket.on('current-usernames', usersData => {
