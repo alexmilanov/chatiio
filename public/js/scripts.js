@@ -52,8 +52,6 @@ $(function() {
     window.addEventListener("beforeunload", function(e){
         socket.emit('leaving')
     }, false)
-
-    // $('#user-list').selectable()
     
     $('#user-list').on('click', 'li.list-group-item', function() {
         if($('.list-group-item.ui-selected').length) {
