@@ -1,5 +1,5 @@
 ## Chatiio
-Simple message server and client written in Node.js with the help of socket.io
+Simple message server and client written in Node.js (tested with 12.x) with the help of socket.io
 ### Installation instructions 
 1. cd to the chatiio main directory
 2. npm i
